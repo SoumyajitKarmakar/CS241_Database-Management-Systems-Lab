@@ -1,0 +1,61 @@
+(1)
+select sname, min(age)
+from student, faculty, class, enrolled
+where student.snum = enrolled.snum
+	and enrolled.cname = class.name
+	and class.fid = faculty.fid
+	and (major = 'English' or fname = 'Ivana Teach');
+
+(2)
+select name from class
+where room = 'R128'
+	or name in (select cname
+			from enrolled
+			group by cname
+			having count(*) < 3);
+
+(3)
+select s1.age, s1.level
+from student as s1
+group by s1.age, s1.level
+having s1.level in (select s2.level
+			from student s2
+			where s1.age = s2.age
+			group by s2.age, s2.level
+			having count(*) >= all (select count(*)
+						from student s3
+						where s3.age = s2.age
+						group by s3.age, s3.level));
+
+(4)
+select fname
+from faculty, class
+where faculty.fid = class.fid
+	and name like 'O%'
+	and room = 'R15'
+	and name in (select cname
+			from enrolled
+			group by cname
+			having count(snum) >= 1);
+
+(5)
+select sname
+from student
+where level = 'SR'
+	and snum in (select snum
+			from enrolled, class
+			where enrolled.cname = class.name
+				and room = 'R15');
+
+(6)
+select name
+from class
+where (name like 'O%' or name like 'A%')
+	and name like '%s'
+	and name not in (select cname
+			from enrolled);
+
+(7)
+select faculty.fid, fname, count(class.name)
+from faculty left outer join class on faculty.fid = class.fid
+group by fname;

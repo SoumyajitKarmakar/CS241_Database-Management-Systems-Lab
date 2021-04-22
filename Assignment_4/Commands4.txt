@@ -1,0 +1,90 @@
+(1)
+select level, avg(age)
+from student
+group by level;
+
+(2)
+select level, avg(age)
+from student
+where level != 'JR'
+group by level;
+
+(3)
+select fname, count(name)
+from class, faculty
+where faculty.fid = class.fid
+group by faculty.fname;
+
+(4)
+select sname, student.snum
+from student, enrolled
+where student.snum = enrolled.snum
+	and cname = 'Database Systems'
+	and cname != 'Operating System Design';
+
+(5)
+select cname, avg(age)
+from student, enrolled
+where student.snum = enrolled.snum
+group by cname
+having count(enrolled.snum) >= 2;
+
+(6)
+select faculty.fid
+from faculty, class
+where faculty.fid = class.fid
+group by fid
+having count(name) > 1;
+
+(7)
+select student.snum
+from student, enrolled
+where student.snum = enrolled.snum
+group by student.snum
+having count(cname) > 1;
+
+(8)
+select *
+from student
+order by age;
+
+(9)
+select sname, snum
+from student
+where major in ('Electrical Engineering', 'Mechanical Engineering', 'Computer Engineering', 'Civil Engineering');
+
+(10)
+select major, count(sname)
+from student
+group by major;
+
+(11)
+select distinct faculty.fname, faculty.fid
+from faculty, class
+where faculty.fid = class.fid
+	and (class.name = 'Data Structures' or class.name = 'Operating System Design');
+
+(12)
+select fname, faculty.fid
+from faculty, class
+where faculty.fid = class.fid
+	and deptid = 20;
+
+(13)
+select sname, snum
+from student
+where student.snum not in (select student.snum
+				from student, enrolled
+				where student.snum = enrolled.snum);
+
+(14)
+select sname, age
+from student
+where sname like '% H__%';
+
+(15)
+select level, min(age)
+from student
+where age >= 18
+group by level
+having count(*) >= 2;

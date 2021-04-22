@@ -1,0 +1,112 @@
+(1)
+alter table Student add primary key (snum);
+
+alter table Faculty add primary key (fid);
+
+create table Class(
+name varchar(40),
+meets_at varchar(40),
+room varchar(40),
+fid int);
+
+alter table Class add primary key (name);
+alter table Class add foreign key (fid) references Faculty(fid);
+
+create table Enrolled(
+snum int,
+cname varchar(40),
+primary key (snum,cname),
+foreign key (snum) references Student(snum));
+
+alter table Enrolled add foreign key (cname) references Class(name);
+
+(2)
+insert into class values
+("Data Structures","MWF 10","R128",489456522);
+("Database Systems","MWF 12:30-1:45","1320 DCL",142519864),
+("Operating System Design","TuTh 12-1:20","20 AVW",489456522),
+("Archaeology of the Incas","MWF 3-4:15","R128",248965255),
+("Aviation Accident Investigation","TuTh 1-2:50","Q3",011564812);
+("Air Quality Engineering","TuTh 10:30-11:45","R15",011564812),
+("Introductory Latin","MWF 3-4:15","R12",248965255),
+("American Political Parties","TuTh 2-3:15","20 AVW",619023588),
+("Social Cognition","Tu 6:30-8:40","R15",159542516),
+("Perception","MTuWTh 3","Q3",489221823),
+("Multivariate Analysis","TuTh 2-3:15","R15",090873519),
+("Patent Law","F 1-2:50","R128",090873519),
+("Urban Economics","MWF 11","20 AVW",489221823),
+("Organic Chemistry","TuTh 12:30-1:45","R12",489221823);
+("Marketing Research","MW 10-11:15","1320 DCL",489221823),
+("Seminar in American Art","M 4","R15",489221823),
+("Orbital Mechanics","MWF 8","1320 DCL",011564812),
+("Dairy Herd Management","TuTh 12:30-1:45","R128",356187925),
+("Communication Networks","MW 9:30-10:45","20 AVW",141582651),
+("Optical Electronics","TuTh 12:30-1:45","R15",254099823),
+("Introduction to Math","TuTh 8-9:30","R128",489221823);
+
+insert into enrolled values
+(112348546,"Database Systems");
+(115987938,"Database Systems"),
+(348121549,"Database Systems"),
+(322654189,"Database Systems"),
+(552455318,"Database Systems"),
+(455798411,"Operating System Design"),
+(552455318,"Operating System Design"),
+(567354612,"Operating System Design"),
+(112348546,"Operating System Design"),
+(115987938,"Operating System Design"),
+(322654189,"Operating System Design"),
+(567354612,"Data Structures"),
+(552455318,"Communication Networks"),
+(455798411,"Optical Electronics"),
+(301221823,"Perception"),
+(301221823,"Social Cognition"),
+(301221823,"American Political Parties"),
+(556784565,"Air Quality Engineering"),
+(099354543,"Patent Law"),
+(574489456,"Urban Economics");
+
+(3)
+select *
+from class
+where room = "R128";
+
+(4)
+select fid,fname,deptid
+from faculty natural join class
+where room = "R15";
+
+(5)
+select fname
+from faculty natural join class
+where name = "Orbital Mechanics";
+
+(6)
+select sname
+from student join enrolled join class join faculty
+where student.snum = enrolled.snum
+	and enrolled.cname = class.name
+	and class.fid = faculty.fid
+	and faculty.fname = "John Williams";
+
+(7)
+select sname
+from student join enrolled join class join faculty
+where student.snum = enrolled.snum
+	and enrolled.cname = class.name
+	and class.fid = faculty.fid
+	and faculty.fname = "Ivana Teach"
+	and student.level = "SR";
+
+(8)
+select cname
+from student join enrolled
+where student.snum = enrolled.snum
+	and student.sname = "Lisa Walker";
+
+(9)
+select sname
+from student
+where student.snum in (select student.snum
+			from student join enrolled
+			where student.snum = enrolled.snum);

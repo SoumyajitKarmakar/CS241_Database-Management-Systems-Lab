@@ -1,0 +1,61 @@
+(1)
+select f.fname
+from faculty f
+where not exists (select c1.room
+		from class c1
+		where c1.room not in (select c2.room
+					from class c2
+					where f.fid = c2.fid));
+
+(2)
+with a as
+	(select class.fid, count(class.name) as count
+	from class
+	group by class.fid)
+select fname
+from a, faculty
+where a.fid = faculty.fid
+	and count = (select min(count) from a);
+
+(3)
+select sname
+from student
+where snum not in (select enrolled.snum from enrolled);
+
+(4)
+with a(room, count) as
+	(select room, count(name)
+	from class
+	group by room having count(name) >= 5)
+select class.name
+from class, a
+where class.room = a.room;
+
+(5)
+with a(name, count)
+	as (select cname, count(snum)
+	from enrolled
+	group by cname
+	having count(snum) >= 2)
+select a.name, meets_at
+from a, class
+where a.name = class.name;
+
+(6)
+select *
+from student
+where age > 20
+	and major like '% Engineering'
+	and level in ('FR', 'SR');
+
+(7)
+with a(name) as
+	(select class.name
+	from faculty, class
+	where class.fid = faculty.fid
+	group by faculty.fid
+	having count(*) < 2)
+select student.sname
+from student, enrolled, a
+where enrolled.cname = a.name
+	and student.snum = enrolled.snum;

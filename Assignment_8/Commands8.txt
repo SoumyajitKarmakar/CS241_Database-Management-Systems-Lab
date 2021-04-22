@@ -1,0 +1,41 @@
+(1)
+delimiter //
+
+create function stu_count (fac_name varchar(20))
+returns integer deterministic
+begin
+declare s_count integer;
+	select count(*) into s_count
+	from class c, enrolled e, faculty f
+	where c.name = e.cname
+		and f.fid = c.fid
+		and f.fname = fac_name;
+return s_count;
+end//
+
+delimiter ;
+
+select fname
+from faculty
+where stu_count(fname) > 1;
+
+(2)
+delimiter //
+
+create function f_grade(course_name varchar(40))
+returns integer deterministic
+begin
+declare f_count integer;
+	select count(*) into f_count
+	from enrolled1
+	where cname = course_name
+		and grade = 'F';
+return f_count;
+end//
+
+delimiter ;
+
+select fname
+from faculty f, class c
+where f.fid = c.fid
+	and f_grade(c.name) > 1;
